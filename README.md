@@ -38,6 +38,7 @@ of the scripted stub.
 | `make investigate` | investigate 5 incidents spanning all three tiers |
 | `make api` / `make web` | backend and frontend dev servers |
 | `make build` | lint and production-build the frontend |
+| `make test` | backend pytest (in-memory DB, no telemetry.db needed) + frontend vitest |
 | `make clean` | drop the venv, database, model artifacts, and `dist/` |
 
 ## The three detectors
@@ -177,6 +178,7 @@ backend/app/
   pipeline.py                   the one-command orchestration
   schemas.py  main.py           response models and the FastAPI surface
 backend/data/past_incidents.json   15 past write-ups
+backend/tests/                     pytest, against an in-memory DB — see `make test`
 frontend/src/
   api/                          client + fetch hook
   components/                   charts, tooltips, shared UI

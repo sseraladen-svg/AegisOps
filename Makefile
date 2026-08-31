@@ -1,4 +1,4 @@
-.PHONY: install seed detect train eval kb investigate pipeline all up api web build clean
+.PHONY: install seed detect train eval kb investigate pipeline all up api web build test clean
 
 VENV := backend/.venv
 
@@ -67,6 +67,12 @@ web:
 
 build:
 	cd frontend && npm install && npm run lint && npm run build
+
+# Runs against an in-memory database, never backend/telemetry.db — see
+# backend/tests/conftest.py for why.
+test: install
+	cd backend && .venv/bin/python -m pytest tests -q
+	cd frontend && npm install && npm test -- --run
 
 clean:
 	rm -rf $(VENV) backend/telemetry.db backend/artifacts frontend/dist

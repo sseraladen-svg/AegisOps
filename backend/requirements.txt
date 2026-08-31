@@ -10,3 +10,4 @@ anthropic
 faiss-cpu
 # Required by starlette's TestClient.
 httpx
+pytest
