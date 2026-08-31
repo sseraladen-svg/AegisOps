@@ -4,3 +4,9 @@ sqlalchemy
 pandas
 numpy
 scikit-learn
+# Installed from the CPU wheel index by the Makefile/Dockerfile; see TORCH_INDEX.
+torch
+anthropic
+faiss-cpu
+# Required by starlette's TestClient.
+httpx

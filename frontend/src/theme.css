@@ -1,0 +1,80 @@
+/* Design tokens.
+ *
+ * Chart colors are the validated three-slot categorical palette (blue /
+ * orange / aqua) — the first three slots clear the all-pairs CVD and
+ * normal-vision floors in both light and dark mode. Dark is a separate set of
+ * steps chosen for the dark surface, not an automatic flip of the light one.
+ *
+ * One rule worth stating because it is easy to break later: a detector's color
+ * follows the detector, never its position in a list. Toggling a detector off
+ * must not repaint the ones that remain.
+ */
+:root {
+  color-scheme: light;
+
+  --surface-1: #fcfcfb;
+  --page: #f9f9f7;
+  --text-primary: #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted: #898781;
+  --gridline: #e1e0d9;
+  --axis: #c3c2b7;
+  --border: rgba(11, 11, 11, 0.1);
+  --surface-raised: #ffffff;
+  --wash: rgba(11, 11, 11, 0.04);
+
+  /* categorical — one slot per detector, fixed for the life of the app */
+  --naive: #2a78d6;
+  --isolation_forest: #eb6834;
+  --lstm_autoencoder: #1baf7a;
+
+  /* status — reserved, never reused as a series color */
+  --good: #0ca30c;
+  --warning: #fab219;
+  --serious: #ec835a;
+  --critical: #d03b3b;
+
+  --radius: 10px;
+  --font: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --surface-1: #1a1a19;
+    --page: #0d0d0d;
+    --text-primary: #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted: #898781;
+    --gridline: #2c2c2a;
+    --axis: #383835;
+    --border: rgba(255, 255, 255, 0.1);
+    --surface-raised: #222221;
+    --wash: rgba(255, 255, 255, 0.05);
+
+    --naive: #3987e5;
+    --isolation_forest: #d95926;
+    --lstm_autoencoder: #199e70;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --surface-1: #1a1a19;
+  --page: #0d0d0d;
+  --text-primary: #ffffff;
+  --text-secondary: #c3c2b7;
+  --text-muted: #898781;
+  --gridline: #2c2c2a;
+  --axis: #383835;
+  --border: rgba(255, 255, 255, 0.1);
+  --surface-raised: #222221;
+  --wash: rgba(255, 255, 255, 0.05);
+
+  --naive: #3987e5;
+  --isolation_forest: #d95926;
+  --lstm_autoencoder: #199e70;
+}

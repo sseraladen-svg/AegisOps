@@ -1,0 +1,90 @@
+{
+  "generated_at": "2026-08-30T20:39:11+00:00",
+  "tiers": [
+    "obvious_spike",
+    "gradual_drift",
+    "subtle_correlated"
+  ],
+  "ground_truth_counts": {
+    "obvious_spike": 1,
+    "gradual_drift": 1,
+    "subtle_correlated": 2
+  },
+  "detectors": {
+    "naive": {
+      "precision": [
+        0.0098,
+        0.0,
+        0.0
+      ],
+      "recall": [
+        1.0,
+        0.0,
+        0.0
+      ],
+      "f1": [
+        0.0194,
+        0.0,
+        0.0
+      ],
+      "overall": {
+        "precision": 0.0098,
+        "recall": 0.25,
+        "f1": 0.0189
+      },
+      "incidents": 102,
+      "false_positives": 101,
+      "tuning": "fixed z-score threshold, no tuning against labels"
+    },
+    "isolation_forest": {
+      "precision": [
+        0.004,
+        0.0118,
+        0.0157
+      ],
+      "recall": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "f1": [
+        0.0079,
+        0.0233,
+        0.0309
+      ],
+      "overall": {
+        "precision": 0.0309,
+        "recall": 1.0,
+        "f1": 0.0599
+      },
+      "incidents": 259,
+      "false_positives": 251,
+      "tuning": "contamination grid tuned against ground-truth labels"
+    },
+    "lstm_autoencoder": {
+      "precision": [
+        0.0233,
+        0.0233,
+        0.0667
+      ],
+      "recall": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "f1": [
+        0.0455,
+        0.0455,
+        0.125
+      ],
+      "overall": {
+        "precision": 0.1064,
+        "recall": 1.0,
+        "f1": 0.1923
+      },
+      "incidents": 47,
+      "false_positives": 42,
+      "tuning": "reconstruction-error percentile on an unlabelled validation split"
+    }
+  }
+}

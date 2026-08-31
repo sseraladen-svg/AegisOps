@@ -58,7 +58,9 @@ telemetry.db
 *.index
 *.faiss
 
-eval/results.json
+# eval/results.json is the *frozen* detector comparison the frontend
+# evaluation page reads — it is a committed artifact, not build output.
+backend/artifacts/
 
 .DS_Store
 .DS_Store?
@@ -75,4 +77,4 @@ Thumbs.db
 
 .pytest_cache/
 htmlcov/
-.idea.idea/
+

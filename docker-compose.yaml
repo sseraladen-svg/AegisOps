@@ -1,4 +1,17 @@
-version: '3.8'
+# One command from nothing to a working dashboard:
+#
+#     docker compose up --build
+#
+# The backend generates telemetry and runs all three detectors on first start
+# (see backend/entrypoint.sh), then serves the API on :8000. The frontend dev
+# server comes up on :5173 and talks to the backend from the *browser*, which
+# is why VITE_API_BASE points at localhost rather than the compose service name.
+#
+# Agent investigations are not part of this: they need an Anthropic API key.
+# Set ANTHROPIC_API_KEY (a .env file beside this one is picked up automatically)
+# and run `make investigate`, or `make investigate OFFLINE=1` for the scripted
+# stub.
+
 services:
   backend:
     build: ./backend
@@ -6,7 +19,24 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/app
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      # eval/results.json lives outside backend/ and is both written by the
+      # pipeline and read by GET /api/eval/results, so this mount is read-write.
+      - ./eval:/eval
+    environment:
+      # file_github_issue stays a dry run unless this is explicitly "live" and
+      # GITHUB_TOKEN / GITHUB_REPO are both provided.
+      AGENT_GITHUB_MODE: "${AGENT_GITHUB_MODE:-dry_run}"
+      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY:-}"
+      GITHUB_TOKEN: "${GITHUB_TOKEN:-}"
+      GITHUB_REPO: "${GITHUB_REPO:-}"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 5s
+      # The first start runs the pipeline, so allow generous startup time
+      # before the container is reported unhealthy.
+      retries: 5
+      start_period: 180s
 
   frontend:
     build: ./frontend
@@ -14,4 +44,12 @@ services:
       - "5173:5173"
     volumes:
       - ./frontend:/app
+      # Anonymous volume so the image's node_modules isn't shadowed by the
+      # host bind mount (which may hold host-platform binaries, or nothing).
+      - /app/node_modules
+    environment:
+      VITE_API_BASE: "${VITE_API_BASE:-http://localhost:8000}"
+    depends_on:
+      backend:
+        condition: service_started
     command: npm run dev -- --host
