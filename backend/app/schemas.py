@@ -10,6 +10,10 @@ from typing import Any, Dict, List, Literal, Optional
 from pydantic import BaseModel, Field
 
 DetectorName = Literal["naive", "isolation_forest", "lstm_autoencoder"]
+# The frontend's TIER_LABELS map keys on exactly these three strings; typing
+# them here is what puts them in the OpenAPI document, so a rename in seed.py
+# shows up as a contract change instead of as blank labels in the UI.
+Tier = Literal["obvious_spike", "gradual_drift", "subtle_correlated"]
 LogLevel = Literal["DEBUG", "INFO", "WARN", "ERROR"]
 Severity = Literal["low", "medium", "high"]
 HealthStatus = Literal["healthy", "degraded", "critical", "unknown"]
@@ -86,7 +90,7 @@ class GroundTruthOut(BaseModel):
     metric_name: str
     ts_start: str
     ts_end: str
-    difficulty_tier: str
+    difficulty_tier: Tier
 
 
 class EvidenceOut(BaseModel):
@@ -163,13 +167,13 @@ class DetectorScores(BaseModel):
 
 class EvalResults(BaseModel):
     generated_at: str
-    tiers: List[str]
+    tiers: List[Tier]
     ground_truth_counts: Dict[str, int]
     detectors: Dict[str, DetectorScores]
 
 
 class DemoIncident(BaseModel):
-    tier: str
+    tier: Tier
     label: str
     why_it_matters: str
     incident_id: Optional[int] = None

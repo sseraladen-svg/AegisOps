@@ -13,7 +13,6 @@ Every endpoint declares a response model. That is what makes /docs a usable
 contract for the frontend rather than a list of endpoints returning `object`.
 """
 import json
-from collections import Counter
 from datetime import datetime, timedelta, timezone
 
 from fastapi import Depends, FastAPI, HTTPException, Path, Query
@@ -448,13 +447,21 @@ def list_incidents(
     if end:
         query = query.filter(Incident.ts_start <= end)
 
+    # The investigated filter has to be part of the query, not a pass over the
+    # rows it returned: filtering after LIMIT means `limit` caps the rows
+    # *scanned* rather than the rows returned, so `investigated=true&limit=5`
+    # could answer "none" while five investigated incidents sat just past the
+    # cut. EXISTS keeps it a single round trip.
+    has_report = session.query(Investigation.incident_id).filter(
+        Investigation.incident_id == Incident.id).exists()
+    if investigated is not None:
+        query = query.filter(has_report if investigated else ~has_report)
+
     order = Incident.anomaly_score.desc() if order_by == "anomaly_score" else Incident.ts_start
     rows = query.order_by(order).limit(limit).all()
 
     investigated_ids = {
         i for (i,) in session.query(Investigation.incident_id).distinct().all()}
-    if investigated is not None:
-        rows = [r for r in rows if (r.id in investigated_ids) == investigated]
 
     names = _service_names(session)
     return [_incident_out(row, names, investigated_ids) for row in rows]
