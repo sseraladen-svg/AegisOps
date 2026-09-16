@@ -10,6 +10,24 @@ Intelligent anomaly detection and investigation for service telemetry with AI-po
 - **Multi-Provider Support**: Switch between Anthropic Claude and Google Gemini
 - **Offline Mode**: Test the system without API keys using simulated agent responses
 
+## Quick Start
+
+```bash
+# Start the application with synthetic data
+docker compose up --build
+
+# Or run manually
+cd backend
+python -m venv .venv
+.venv/bin/pip install -r requirements.txt
+.venv/bin/python -m app.seed  # Generate synthetic data
+.venv/bin/python -m app.detector_naive
+.venv/bin/python -m app.detector_isolation_forest  
+.venv/bin/python -m app.detector_lstm_autoencoder
+.venv/bin/python -m app.investigator --sample --offline
+.venv/bin/uvicorn app.main:app --reload --port 8000
+```
+
 ## AI Provider Support
 
 AegisOps supports multiple AI providers for the investigation agent:
