@@ -32,11 +32,17 @@ import re
 import time
 from datetime import datetime, timezone
 from typing import List, Literal
+from pathlib import Path
+
+# Load environment variables from .env file (in parent directory) BEFORE importing config
+REPO_ROOT = Path(__file__).resolve().parent.parent
+from dotenv import load_dotenv
+load_dotenv(REPO_ROOT / '.env')
 
 from pydantic import BaseModel, Field
 
 from app.agent_tools import TOOL_SCHEMAS, ToolError, dispatch
-from app.config import AGENT_MAX_ITERATIONS, AGENT_MAX_TOKENS, AGENT_MODEL
+from app.config import AGENT_MAX_ITERATIONS, AGENT_MAX_TOKENS, AGENT_MODEL, AGENT_PROVIDER
 from app.db import session_scope
 from app.detector_utils import load_ground_truth, windows_overlap
 from app.models import Incident, Investigation, Service
@@ -451,12 +457,19 @@ def build_client(offline=False):
     if offline:
         from app.offline_agent import ScriptedClient
         return ScriptedClient()
-    import anthropic
-    if not (os.environ.get('ANTHROPIC_API_KEY') or os.environ.get('ANTHROPIC_AUTH_TOKEN')):
-        raise RuntimeError(
-            "no Anthropic credentials found. Export ANTHROPIC_API_KEY, or run with "
-            "--offline to exercise the loop against the scripted stub instead.")
-    return anthropic.Anthropic()
+    
+    provider = AGENT_PROVIDER.lower()
+    
+    if provider == "gemini":
+        from app.gemini_client import GeminiClient
+        return GeminiClient()
+    else:  # default to anthropic
+        import anthropic
+        if not (os.environ.get('ANTHROPIC_API_KEY') or os.environ.get('ANTHROPIC_AUTH_TOKEN')):
+            raise RuntimeError(
+                "no Anthropic credentials found. Export ANTHROPIC_API_KEY, or run with "
+                "--offline to exercise the loop against the scripted stub instead.")
+        return anthropic.Anthropic()
 
 
 def main():

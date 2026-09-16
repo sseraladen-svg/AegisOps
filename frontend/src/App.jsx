@@ -35,7 +35,7 @@ export default function App() {
     <div className="shell">
       <header className="topbar">
         <Link to="/" className="brand">
-          <strong>agentic-copilot</strong>
+          <strong>AegisOps</strong>
           <span>anomaly detection &amp; investigation</span>
         </Link>
         <nav className="nav">

@@ -1,7 +1,42 @@
-# agentic-copilot
+# AegisOps
 
-Anomaly detection over synthetic service telemetry, an LLM agent that
-investigates what the detectors find, and a dashboard that shows its work.
+Intelligent anomaly detection and investigation for service telemetry with AI-powered analysis.
+
+## Features
+
+- **Multi-Detector System**: Three anomaly detection algorithms (naive, isolation forest, LSTM autoencoder)
+- **AI-Powered Investigation**: Automatic incident analysis using Claude or Gemini AI models
+- **Real-time Dashboard**: Interactive visualization of metrics, incidents, and investigation results
+- **Multi-Provider Support**: Switch between Anthropic Claude and Google Gemini
+- **Offline Mode**: Test the system without API keys using simulated agent responses
+
+## AI Provider Support
+
+AegisOps supports multiple AI providers for the investigation agent:
+
+### Anthropic Claude (Default)
+```bash
+export AGENT_PROVIDER=anthropic
+export ANTHROPIC_API_KEY=your_key_here
+cd backend
+python -m app.investigator --sample
+```
+
+### Google Gemini
+```bash
+export AGENT_PROVIDER=gemini
+export GEMINI_API_KEY=your_key_here
+cd backend
+python -m app.investigator --sample
+```
+
+### Offline Mode (No API Key Required)
+```bash
+cd backend
+python -m app.investigator --sample --offline
+```
+
+Copy `.env.example` to `.env` and set your API keys there for persistent configuration.
 
 Three services (`auth-service`, `payment-gateway`, `user-profile`) emit four
 metrics each — `cpu_usage`, `latency_ms`, `error_rate`, `request_rate` — every

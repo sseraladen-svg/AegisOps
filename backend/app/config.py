@@ -5,10 +5,14 @@ seed.py, db.py and eval_harness.py. Paths are anchored to this file's location
 rather than the process CWD so `python -m app.seed` and `uvicorn app.main:app`
 resolve the same database no matter where they're launched from.
 """
+import os
 from pathlib import Path
+from dotenv import load_dotenv
 
+# Load environment variables from .env file (in parent directory)
 BACKEND_DIR = Path(__file__).resolve().parents[1]
 REPO_ROOT = BACKEND_DIR.parent
+load_dotenv(REPO_ROOT / '.env')
 
 DB_PATH = BACKEND_DIR / "telemetry.db"
 DB_URL = f"sqlite:///{DB_PATH}"
@@ -49,6 +53,7 @@ SEED = 42
 
 # --- agent / investigation loop -------------------------------------------
 
-AGENT_MODEL = "claude-opus-5"
+AGENT_MODEL = os.environ.get("AGENT_MODEL", "claude-opus-5")
+AGENT_PROVIDER = os.environ.get("AGENT_PROVIDER", "anthropic")  # "anthropic" or "gemini"
 AGENT_MAX_TOKENS = 16000
 AGENT_MAX_ITERATIONS = 12   # hard stop on the tool-use loop

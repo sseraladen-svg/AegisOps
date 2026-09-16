@@ -49,7 +49,7 @@ def openapi():
 
 def test_document_generates_and_declares_version(openapi):
     assert openapi["openapi"].startswith("3.")
-    assert openapi["info"]["title"] == "agentic-copilot"
+    assert openapi["info"]["title"] == "AegisOps"
     assert openapi["info"]["version"]
 
 

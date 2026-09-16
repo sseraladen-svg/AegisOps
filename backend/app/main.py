@@ -14,6 +14,12 @@ contract for the frontend rather than a list of endpoints returning `object`.
 """
 import json
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from .env file (in parent directory)
+REPO_ROOT = Path(__file__).resolve().parent.parent
+load_dotenv(REPO_ROOT / '.env')
 
 from fastapi import Depends, FastAPI, HTTPException, Path, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -33,7 +39,7 @@ from app.schemas import (
 )
 
 app = FastAPI(
-    title="agentic-copilot",
+    title="AegisOps",
     version="0.5.0",
     summary="Anomaly detection over service telemetry, with an investigation agent.",
     description=(

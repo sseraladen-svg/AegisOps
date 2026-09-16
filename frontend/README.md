@@ -1,6 +1,6 @@
 # frontend
 
-The dashboard for [agentic-copilot](../README.md) — see the root README for
+The dashboard for [AegisOps](../README.md) — see the root README for
 what this project is, how to run it, and the API it reads from.
 
 ```bash

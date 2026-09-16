@@ -11,6 +11,8 @@
 # Set ANTHROPIC_API_KEY (a .env file beside this one is picked up automatically)
 # and run `make investigate`, or `make investigate OFFLINE=1` for the scripted
 # stub.
+#
+# AegisOps - Intelligent anomaly detection and investigation for service telemetry
 
 services:
   backend:
@@ -26,7 +28,9 @@ services:
       # file_github_issue stays a dry run unless this is explicitly "live" and
       # GITHUB_TOKEN / GITHUB_REPO are both provided.
       AGENT_GITHUB_MODE: "${AGENT_GITHUB_MODE:-dry_run}"
+      AGENT_PROVIDER: "${AGENT_PROVIDER:-anthropic}"
       ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY:-}"
+      GEMINI_API_KEY: "${GEMINI_API_KEY:-}"
       GITHUB_TOKEN: "${GITHUB_TOKEN:-}"
       GITHUB_REPO: "${GITHUB_REPO:-}"
     healthcheck:

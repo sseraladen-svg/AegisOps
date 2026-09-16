@@ -306,7 +306,7 @@ def file_github_issue(session, title, body, labels=None):
             "Authorization": f"Bearer {os.environ['GITHUB_TOKEN']}",
             "Accept": "application/vnd.github+json",
             "Content-Type": "application/json",
-            "User-Agent": "agentic-copilot",
+            "User-Agent": "AegisOps",
         },
         method="POST",
     )
